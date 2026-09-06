@@ -17,6 +17,15 @@
 /**
  * Language strings for the Profile completion block.
  *
+ * Keys are kept in alphabetical order, as moodle-cs requires.
+ *
+ * The field_<shortname> keys are looked up dynamically from the DB column
+ * name in profile_manager::get_fields(), so a missing one surfaces only when
+ * that field is the one being rendered. The keys for custom profile fields
+ * are unused by the block itself -- those take their label from the
+ * admin-defined field name -- but are kept because removing a published
+ * string breaks any site that has translated it.
+ *
  * @package    block_profile_completion
  * @copyright  2026 LearnByWatch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -24,65 +33,44 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Profile completion';
-$string['profile_completion:addinstance'] = 'Add a Profile completion block';
-$string['profile_completion:myaddinstance'] = 'Add a Profile completion block to My Dashboard';
-
-// Identity.
-$string['greeting'] = 'Hello {$a},';
-$string['addjob'] = 'Add your job title';
-$string['editprofile'] = 'Edit profile';
-
-// Completion.
-$string['completionpct'] = '{$a}% complete';
-$string['pctshort'] = '{$a}%';
-$string['completioncomplete'] = 'Your profile is complete!';
-$string['completionprompt'] = 'Complete your profile so AI can personalise your learning experience.';
-
-// Missing fields.
-$string['missingfields'] = 'What\'s missing';
+$string['add'] = 'Add';
 $string['addfield'] = 'Add';
+$string['addinterest'] = '+ Add';
+$string['addjob'] = 'Add your job title';
 $string['addlabel'] = 'Add {$a}';
 $string['andmore'] = 'and {$a} more…';
-$string['completeprofile'] = 'Complete your profile';
-
-// Interests.
-$string['interests'] = 'Interests';
-$string['addinterest'] = '+ Add';
-$string['interestplaceholder'] = 'e.g. Cinematography';
-$string['removeinterest'] = 'Remove {$a}';
-
-// Generic actions.
-$string['add'] = 'Add';
-$string['save'] = 'Save';
-$string['saving'] = 'Saving…';
 $string['cancel'] = 'Cancel';
-
-// Errors.
+$string['completeprofile'] = 'Complete your profile';
+$string['completioncomplete'] = 'Your profile is complete!';
+$string['completionpct'] = '{$a}% complete';
+$string['completionprompt'] = 'Complete your profile so AI can personalise your learning experience.';
+$string['editprofile'] = 'Edit profile';
 $string['errorempty'] = 'Please enter a value before saving.';
-$string['errornetwork'] = 'Network error. Please try again.';
 $string['errorgeneric'] = 'Something went wrong. Please try again.';
 $string['errorinvalidfield'] = 'That field does not exist.';
-
-// Field labels. The key format is field_<shortname> and is generated
-// dynamically from the DB column name in profile_manager::get_fields() — a
-// missing key here surfaces only when that field is the one being rendered.
-$string['field_picture'] = 'Profile photo';
-$string['field_description'] = 'Bio';
-$string['field_country'] = 'Country';
+$string['errornetwork'] = 'Network error. Please try again.';
 $string['field_city'] = 'City';
-$string['field_institution'] = 'Organisation';
-$string['field_department'] = 'Department';
-
-// Custom profile fields take their label from the admin-defined field name, so
-// these are unused by the block. Kept because removing a published string is a
-// breaking change for any site that has translated them.
-$string['field_jobtitle'] = 'Job title';
-$string['field_industry'] = 'Industry';
-$string['field_experience_level'] = 'Experience level';
-$string['field_learning_goals'] = 'Learning goals';
+$string['field_country'] = 'Country';
 $string['field_current_skills'] = 'Current skills';
+$string['field_department'] = 'Department';
+$string['field_description'] = 'Bio';
+$string['field_experience_level'] = 'Experience level';
+$string['field_industry'] = 'Industry';
+$string['field_institution'] = 'Organisation';
 $string['field_interests'] = 'Interests';
-
-$string['privacy:metadata'] = 'The Profile completion block only displays existing profile '
-    . 'data and does not store any data itself.';
+$string['field_jobtitle'] = 'Job title';
+$string['field_learning_goals'] = 'Learning goals';
+$string['field_picture'] = 'Profile photo';
+$string['greeting'] = 'Hello {$a},';
+$string['interestplaceholder'] = 'e.g. Cinematography';
+$string['interests'] = 'Interests';
+$string['missingfields'] = 'What\'s missing';
+$string['pctshort'] = '{$a}%';
+$string['pluginname'] = 'Profile completion';
+$string['privacy:metadata'] = 'The Profile completion block only displays existing profile data '
+    . 'and does not store any data itself.';
+$string['profile_completion:addinstance'] = 'Add a Profile completion block';
+$string['profile_completion:myaddinstance'] = 'Add a Profile completion block to My Dashboard';
+$string['removeinterest'] = 'Remove {$a}';
+$string['save'] = 'Save';
+$string['saving'] = 'Saving…';

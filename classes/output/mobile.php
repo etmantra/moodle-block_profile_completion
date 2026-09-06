@@ -31,7 +31,6 @@ use block_profile_completion\profile_manager;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mobile {
-
     /** @var int Missing-field chips shown before the "+N more" summary. */
     private const MAX_CHIPS = 5;
 

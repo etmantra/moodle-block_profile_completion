@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 use block_profile_completion\output\block_content;
 
 /**
@@ -38,7 +36,6 @@ use block_profile_completion\output\block_content;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_profile_completion extends block_base {
-
     /**
      * Set the block title.
      */

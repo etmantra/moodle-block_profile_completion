@@ -33,7 +33,6 @@ use templatable;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_content implements renderable, templatable {
-
     /** @var float Radius of the progress ring, in the SVG's own viewBox units. */
     public const RING_RADIUS = 36.5;
 

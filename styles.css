@@ -38,6 +38,15 @@
     --pcb-accent-ink: #fff;
     --pcb-success: var(--bs-success, #197b30);
     --pcb-danger: var(--bs-danger, #b02a37);
+
+    /* Overridden just below where color-mix is supported. */
+    --pcb-pill-bg: var(--pcb-inset);
+}
+
+@supports (background: color-mix(in srgb, red 50%, transparent)) {
+    .block_profile_completion {
+        --pcb-pill-bg: color-mix(in srgb, var(--pcb-accent) 12%, transparent);
+    }
 }
 
 .block_profile_completion .pcb-wrap {
@@ -213,15 +222,15 @@
     align-items: center;
 }
 
-/* color-mix keeps the pill tinted with whatever the theme's primary is; the
-   plain background is the fallback where it is unsupported. */
+/* The pill is tinted with whatever the theme's primary is. --pcb-pill-bg is
+   declared once in the variable block, so a browser without color-mix falls
+   back there rather than needing the property twice here. */
 .block_profile_completion .pcb-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     padding: 0.25rem 0.625rem;
-    background: var(--pcb-inset);
-    background: color-mix(in srgb, var(--pcb-accent) 12%, transparent);
+    background: var(--pcb-pill-bg);
     color: var(--pcb-body);
     border: 1px solid var(--pcb-hairline);
     border-radius: 999px;

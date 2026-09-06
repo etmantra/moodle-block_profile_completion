@@ -31,7 +31,6 @@ namespace block_profile_completion;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class profile_manager {
-
     /**
      * Standard user-table fields that count toward completion, in display order.
      *

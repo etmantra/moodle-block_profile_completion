@@ -29,7 +29,6 @@ namespace block_profile_completion\privacy;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\null_provider {
-
     /**
      * Reason why this plugin stores no personal data.
      *

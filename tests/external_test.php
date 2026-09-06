@@ -33,7 +33,6 @@ use core_external\tests\externallib_testcase;
  * @covers     \block_profile_completion\external\remove_interest
  */
 final class external_test extends externallib_testcase {
-
     /**
      * Saving a standard field writes the value and returns the new percentage.
      */
