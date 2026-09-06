@@ -1,0 +1,6 @@
+# Moodle's coding style requires LF line endings; keep them that way on every
+# platform, whatever core.autocrlf is set to locally.
+* text=auto eol=lf
+
+# The built AMD module is generated, not hand-edited.
+amd/build/*.js linguist-generated=true

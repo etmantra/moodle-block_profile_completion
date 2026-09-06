@@ -1,0 +1,155 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_profile_completion/block_content
+
+    Profile completion block body.
+
+    Context variables required for this template:
+    * pct int - Completion percentage.
+    * complete bool - Whether the profile is 100% complete.
+    * ringradius float - Radius of the progress ring, in viewBox units.
+    * circumference float - Ring circumference for stroke-dasharray.
+    * dashoffset float - Ring stroke-dashoffset for the current percentage.
+    * avatar string - Rendered user_picture HTML.
+    * fullname string - The user's full name.
+    * hassubtitle bool - Whether a job title or organisation is set.
+    * subtitle string - Job title and organisation.
+    * haslocation bool - Whether a city or country is set.
+    * location string - City and country.
+    * editurl string - URL of the full profile edit form.
+    * interests array - List of objects with rawname and name.
+    * hasmissing bool - Whether any field is incomplete.
+    * missing array - Chips: key, label, type, current, options.
+    * hasoverflow bool - Whether more fields are missing than are shown.
+    * overflow int - How many further fields are missing.
+    * countriesjson string - Country code => name, as JSON.
+
+    Example context (json):
+    {
+        "pct": 60,
+        "complete": false,
+        "ringradius": 36.5,
+        "circumference": 229.3,
+        "dashoffset": 91.7,
+        "avatar": "<img class='pcb-avatar' src='#' alt=''>",
+        "fullname": "Ada Lovelace",
+        "hassubtitle": true,
+        "subtitle": "Engineer · Analytical Society",
+        "haslocation": true,
+        "location": "London, United Kingdom",
+        "editurl": "https://example.com/user/edit.php?id=2",
+        "interests": [{"rawname": "Maths", "name": "Maths"}],
+        "hasmissing": true,
+        "missing": [
+            {"key": "city", "label": "City", "type": "text", "current": "", "options": "[]"}
+        ],
+        "hasoverflow": true,
+        "overflow": 2,
+        "countriesjson": "{\"GB\":\"United Kingdom\"}"
+    }
+}}
+<div class="pcb-wrap" data-region="profile-completion">
+
+    <div class="pcb-identity">
+        <div class="pcb-ringwrap{{#complete}} pcb-is-complete{{/complete}}" data-pcb-ring>
+            <svg class="pcb-ring" viewBox="0 0 76 76" aria-hidden="true" focusable="false">
+                <circle class="pcb-ring-track" cx="38" cy="38" r="{{ringradius}}"></circle>
+                <circle class="pcb-ring-fill" cx="38" cy="38" r="{{ringradius}}"
+                        style="stroke-dasharray: {{circumference}}; stroke-dashoffset: {{dashoffset}};"></circle>
+            </svg>
+            {{{avatar}}}
+            <span class="pcb-pct-badge" data-pcb-badge>{{#str}} pctshort, block_profile_completion, {{pct}} {{/str}}</span>
+        </div>
+
+        <div class="pcb-identity-info">
+            <div class="pcb-name">{{fullname}}</div>
+            {{#hassubtitle}}
+                <div class="pcb-subtitle">{{subtitle}}</div>
+            {{/hassubtitle}}
+            {{^hassubtitle}}
+                <div class="pcb-subtitle pcb-placeholder">{{#str}} addjob, block_profile_completion {{/str}}</div>
+            {{/hassubtitle}}
+            {{#haslocation}}
+                <div class="pcb-location">{{location}}</div>
+            {{/haslocation}}
+            <a class="pcb-editlink" href="{{editurl}}">
+                {{#str}} editprofile, block_profile_completion {{/str}} <span aria-hidden="true">&rarr;</span>
+            </a>
+        </div>
+    </div>
+
+    <p class="pcb-prompt{{#complete}} pcb-complete{{/complete}}" data-pcb-prompt>
+        {{#complete}}{{#str}} completioncomplete, block_profile_completion {{/str}}{{/complete}}
+        {{^complete}}{{#str}} completionprompt, block_profile_completion {{/str}}{{/complete}}
+    </p>
+
+    <div class="pcb-section">
+        <div class="pcb-section-label">{{#str}} interests, block_profile_completion {{/str}}</div>
+        <div class="pcb-pills" data-pcb-pills>
+            {{> block_profile_completion/interest_pills }}
+            <button type="button" class="pcb-pill-add" data-pcb-add-interest>
+                {{#str}} addinterest, block_profile_completion {{/str}}
+            </button>
+        </div>
+
+        <div class="pcb-interest-input-row" data-pcb-interest-row hidden>
+            <label class="visually-hidden" for="pcb-interest-input-{{uniqid}}">
+                {{#str}} addinterest, block_profile_completion {{/str}}
+            </label>
+            <input type="text" class="pcb-input" id="pcb-interest-input-{{uniqid}}" data-pcb-interest-input
+                   maxlength="50" placeholder="{{#str}} interestplaceholder, block_profile_completion {{/str}}">
+            <button type="button" class="pcb-btn pcb-btn-primary" data-pcb-interest-save>
+                {{#str}} add, block_profile_completion {{/str}}
+            </button>
+            <button type="button" class="pcb-btn" data-pcb-interest-cancel>
+                {{#str}} cancel, block_profile_completion {{/str}}
+            </button>
+        </div>
+
+        <div class="pcb-interest-error" data-pcb-interest-error hidden role="alert"></div>
+    </div>
+
+    {{#hasmissing}}
+        <div class="pcb-section" data-pcb-missing>
+            <div class="pcb-section-label">{{#str}} missingfields, block_profile_completion {{/str}}</div>
+            <div class="pcb-chips">
+                {{#missing}}
+                    <button type="button" class="pcb-chip" data-pcb-chip="{{key}}" data-type="{{type}}"
+                            data-label="{{label}}" data-current="{{current}}" data-options="{{options}}">
+                        <span class="pcb-chip-label">{{label}}</span>
+                        <span class="pcb-chip-add">
+                            {{#str}} addfield, block_profile_completion {{/str}} <span aria-hidden="true">&rarr;</span>
+                        </span>
+                    </button>
+                {{/missing}}
+            </div>
+            {{#hasoverflow}}
+                <span class="pcb-more" data-pcb-more data-overflow="{{overflow}}">
+                    {{#str}} andmore, block_profile_completion, {{overflow}} {{/str}}
+                </span>
+            {{/hasoverflow}}
+            <a class="pcb-cta" href="{{editurl}}">{{#str}} completeprofile, block_profile_completion {{/str}}</a>
+        </div>
+    {{/hasmissing}}
+
+    {{!
+        Inert: type="application/json" is not executed by the browser, and the
+        AMD module reads it once on init to populate the country selector.
+    }}
+    <script type="application/json" data-pcb-countries>{{{countriesjson}}}</script>
+</div>

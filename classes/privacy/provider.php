@@ -14,19 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace block_profile_completion\privacy;
+
 /**
- * Version details for the Profile completion block.
+ * Privacy provider for the Profile completion block.
+ *
+ * The block stores nothing of its own. It reads the user's existing profile
+ * fields, tags and picture to work out a completion percentage, and writes
+ * back through core APIs (user_update_user, profile_save_data, core_tag_tag),
+ * which own that data and declare it in their own providers.
  *
  * @package    block_profile_completion
  * @copyright  2026 LearnByWatch
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements \core_privacy\local\metadata\null_provider {
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2026090600;
-$plugin->requires  = 2024100700; // Moodle 4.5 LTS.
-$plugin->supported = [405, 500];
-$plugin->component = 'block_profile_completion';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '3.0';
+    /**
+     * Reason why this plugin stores no personal data.
+     *
+     * @return string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}

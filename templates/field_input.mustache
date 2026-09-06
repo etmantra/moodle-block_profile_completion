@@ -1,0 +1,64 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_profile_completion/field_input
+
+    The single form control shown inside the inline-edit modal.
+
+    Exactly one of istextarea, isselect and istext is true; they are computed
+    in the AMD module from the chip's data-type.
+
+    Context variables required for this template:
+    * label string - Visible label for the control.
+    * istextarea bool - Render a textarea.
+    * isselect bool - Render a select.
+    * istext bool - Render a single-line text input.
+    * current string - The field's current value.
+    * choices array - For a select: value, label, selected.
+
+    Example context (json):
+    {
+        "label": "Country",
+        "istextarea": false,
+        "isselect": true,
+        "istext": false,
+        "current": "GB",
+        "choices": [
+            {"value": "GB", "label": "United Kingdom", "selected": true},
+            {"value": "IN", "label": "India", "selected": false}
+        ]
+    }
+}}
+<div class="pcb-modal-field">
+    <label for="pcb-field-input-{{uniqid}}">{{label}}</label>
+    {{#istextarea}}
+        <textarea class="form-control pcb-input" id="pcb-field-input-{{uniqid}}" data-pcb-modal-input
+                  rows="4">{{current}}</textarea>
+    {{/istextarea}}
+    {{#isselect}}
+        <select class="form-select pcb-input" id="pcb-field-input-{{uniqid}}" data-pcb-modal-input>
+            <option value="">{{#str}} choosedots {{/str}}</option>
+            {{#choices}}
+                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+            {{/choices}}
+        </select>
+    {{/isselect}}
+    {{#istext}}
+        <input type="text" class="form-control pcb-input" id="pcb-field-input-{{uniqid}}"
+               data-pcb-modal-input value="{{current}}">
+    {{/istext}}
+</div>

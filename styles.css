@@ -1,262 +1,451 @@
-/* block_profile_completion */
+/* This file is part of Moodle - http://moodle.org/
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package    block_profile_completion
+ * @copyright  2026 LearnByWatch
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/* Colours come from the theme's Bootstrap variables, with a literal fallback
+ * for themes that do not define them. An earlier version hardcoded a dark
+ * palette, which was legible only on a dashboard that happened to be dark and
+ * failed WCAG contrast on standard Boost.
+ *
+ * The muted tone is --bs-secondary-color, not the lighter --bs-secondary:
+ * Bootstrap 5.3 defines the former for exactly this use and it clears 4.5:1
+ * on both the light and dark body backgrounds.
+ */
+.block_profile_completion {
+    --pcb-inset: var(--bs-tertiary-bg, #f8f9fa);
+    --pcb-inset-hover: var(--bs-secondary-bg, #e9ecef);
+    --pcb-hairline: var(--bs-border-color, #dee2e6);
+    --pcb-heading: var(--bs-emphasis-color, #1d2125);
+    --pcb-body: var(--bs-body-color, #1d2125);
+    --pcb-muted: var(--bs-secondary-color, #5b6169);
+    --pcb-accent: var(--bs-primary, #0f6cbf);
+    --pcb-accent-ink: #fff;
+    --pcb-success: var(--bs-success, #197b30);
+    --pcb-danger: var(--bs-danger, #b02a37);
+}
 
 .block_profile_completion .pcb-wrap {
     padding: 0.25rem 0;
 }
 
-/* ── Hero ── */
-.block_profile_completion .pcb-hero {
+/* ── Identity ─────────────────────────────────────────────────────────── */
+
+.block_profile_completion .pcb-identity {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.875rem;
 }
 
-.block_profile_completion .pcb-avatar-wrap img.pcb-avatar {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    object-fit: cover;
+.block_profile_completion .pcb-ringwrap {
+    position: relative;
+    width: 76px;
+    height: 76px;
     flex-shrink: 0;
 }
 
-.block_profile_completion .pcb-hero-info {
+.block_profile_completion .pcb-ring {
+    position: absolute;
+    inset: 0;
+    /* Start the arc at 12 o'clock rather than 3. */
+    transform: rotate(-90deg);
+}
+
+.block_profile_completion .pcb-ring circle {
+    fill: none;
+    stroke-width: 3;
+}
+
+.block_profile_completion .pcb-ring-track {
+    stroke: var(--pcb-hairline);
+}
+
+/* stroke-dasharray and the initial offset are set inline by the template,
+   which computes them from the same radius constant the AMD module is
+   handed. */
+.block_profile_completion .pcb-ring-fill {
+    stroke: var(--pcb-accent);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.block_profile_completion .pcb-ringwrap.pcb-is-complete .pcb-ring-fill {
+    stroke: var(--pcb-success);
+}
+
+/* The avatar sits inside the ring. user_picture renders an <img>; size is
+   forced here because it emits width/height attributes of its own. */
+.block_profile_completion img.pcb-avatar {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.block_profile_completion .pcb-pct-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -6px;
+    background: var(--pcb-accent);
+    color: var(--pcb-accent-ink);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    padding: 0.1rem 0.375rem;
+    border-radius: 999px;
+    /* Punches the badge out of the ring rather than letting it collide. */
+    border: 2px solid var(--bs-body-bg, #fff);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.35;
+}
+
+.block_profile_completion .pcb-ringwrap.pcb-is-complete .pcb-pct-badge {
+    background: var(--pcb-success);
+}
+
+.block_profile_completion .pcb-identity-info {
     flex: 1;
     min-width: 0;
 }
 
-.block_profile_completion .pcb-fullname {
-    font-size: 1.15rem;
+.block_profile_completion .pcb-name {
+    font-size: 1.0625rem;
     font-weight: 700;
-    color: var(--bs-body-color, #1a1a1a);
-    line-height: 1.3;
-    margin-bottom: 0.2rem;
+    color: var(--pcb-heading);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .block_profile_completion .pcb-subtitle {
-    font-size: 0.875rem;
-    color: var(--bs-secondary, #555);
-    margin-bottom: 0.15rem;
+    font-size: 0.8125rem;
+    color: var(--pcb-body);
+    margin-top: 0.1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.block_profile_completion .pcb-placeholder {
+.block_profile_completion .pcb-subtitle.pcb-placeholder {
+    color: var(--pcb-muted);
     font-style: italic;
-    color: var(--bs-secondary, #6c757d);
 }
 
 .block_profile_completion .pcb-location {
-    font-size: 0.8rem;
-    color: var(--bs-secondary, #777);
-    margin-bottom: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--pcb-muted);
+    margin-top: 0.05rem;
 }
 
 .block_profile_completion .pcb-editlink {
-    font-size: 0.8rem;
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
     font-weight: 600;
+    color: var(--pcb-accent);
+    text-decoration: none;
 }
 
-/* ── Completion bar ── */
-.block_profile_completion .pcb-completion {
-    margin-bottom: 1.25rem;
+.block_profile_completion .pcb-editlink:hover,
+.block_profile_completion .pcb-editlink:focus {
+    color: var(--pcb-accent);
+    text-decoration: underline;
 }
 
-.block_profile_completion .pcb-completion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.35rem;
-}
-
-.block_profile_completion .pcb-completion-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--bs-secondary, #6c757d);
-}
-
-.block_profile_completion .pcb-pct-label {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--bs-primary, #0d6efd);
-}
-
-.block_profile_completion .pcb-bar-track {
-    width: 100%;
-    height: 8px;
-    background: var(--bs-gray-200, #e9ecef);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
-.block_profile_completion .pcb-bar-fill {
-    height: 100%;
-    background: var(--bs-primary, #0d6efd);
-    border-radius: 4px;
-    transition: width 0.4s ease;
-}
+/* ── Prompt ───────────────────────────────────────────────────────────── */
 
 .block_profile_completion .pcb-prompt {
-    font-size: 0.8rem;
-    color: var(--bs-secondary, #6c757d);
-    margin: 0;
+    font-size: 0.75rem;
+    color: var(--pcb-muted);
+    margin: 0 0 1rem;
+    line-height: 1.45;
 }
 
 .block_profile_completion .pcb-prompt.pcb-complete {
-    color: var(--bs-success, #198754);
+    color: var(--pcb-success);
     font-weight: 600;
 }
 
-/* ── Missing fields ── */
-.block_profile_completion .pcb-missing {
-    border-top: 1px solid var(--bs-gray-200, #e9ecef);
-    padding-top: 1rem;
+/* ── Sections ─────────────────────────────────────────────────────────── */
+
+.block_profile_completion .pcb-section {
+    border-top: 1px solid var(--pcb-hairline);
+    padding-top: 0.875rem;
+    margin-top: 0.875rem;
 }
 
-.block_profile_completion .pcb-missing-label {
-    font-size: 0.8rem;
-    font-weight: 600;
+.block_profile_completion .pcb-section-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--bs-secondary, #6c757d);
+    color: var(--pcb-muted);
     margin-bottom: 0.6rem;
 }
+
+/* ── Interests ────────────────────────────────────────────────────────── */
+
+.block_profile_completion .pcb-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+/* color-mix keeps the pill tinted with whatever the theme's primary is; the
+   plain background is the fallback where it is unsupported. */
+.block_profile_completion .pcb-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.625rem;
+    background: var(--pcb-inset);
+    background: color-mix(in srgb, var(--pcb-accent) 12%, transparent);
+    color: var(--pcb-body);
+    border: 1px solid var(--pcb-hairline);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.block_profile_completion .pcb-pill-remove {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    font-size: 0.875rem;
+    transition: color 0.15s ease;
+}
+
+.block_profile_completion .pcb-pill-remove:hover,
+.block_profile_completion .pcb-pill-remove:focus-visible {
+    color: var(--pcb-danger);
+}
+
+.block_profile_completion .pcb-pill-add {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    background: none;
+    border: 1px dashed var(--pcb-hairline);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--pcb-muted);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.block_profile_completion .pcb-pill-add:hover,
+.block_profile_completion .pcb-pill-add:focus-visible {
+    border-color: var(--pcb-accent);
+    color: var(--pcb-accent);
+}
+
+.block_profile_completion .pcb-interest-input-row {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+/* [hidden] must beat the display:flex above — without this the row is always
+   visible, because a bare attribute selector loses on specificity. */
+.block_profile_completion .pcb-interest-input-row[hidden] {
+    display: none;
+}
+
+.block_profile_completion .pcb-interest-input-row .pcb-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.block_profile_completion .pcb-interest-error {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--pcb-danger);
+}
+
+.block_profile_completion .pcb-interest-error[hidden] {
+    display: none;
+}
+
+/* ── Missing-field chips ──────────────────────────────────────────────── */
 
 .block_profile_completion .pcb-chips {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 0.5rem;
+    gap: 0.375rem;
 }
 
-/* Chip — now a <button>, reset browser defaults */
 .block_profile_completion .pcb-chip {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0.45rem 0.75rem;
-    background: var(--bs-gray-100, #f8f9fa);
-    border: 1px solid var(--bs-gray-200, #e9ecef);
-    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    background: var(--pcb-inset);
+    border: 1px solid var(--pcb-hairline);
+    border-radius: 8px;
     text-align: left;
     cursor: pointer;
-    text-decoration: none;
-    transition: background 0.15s;
     -webkit-appearance: none;
     appearance: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.block_profile_completion .pcb-chip:hover {
-    background: var(--bs-gray-200, #e9ecef);
+.block_profile_completion .pcb-chip:hover,
+.block_profile_completion .pcb-chip:focus-visible {
+    background: var(--pcb-inset-hover);
+    border-color: var(--pcb-accent);
 }
 
 .block_profile_completion .pcb-chip-label {
-    font-size: 0.875rem;
-    color: var(--bs-body-color, #333);
+    font-size: 0.8125rem;
+    color: var(--pcb-body);
 }
 
 .block_profile_completion .pcb-chip-add {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--bs-primary, #0d6efd);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--pcb-accent);
+    white-space: nowrap;
+    padding-left: 0.75rem;
 }
 
 .block_profile_completion .pcb-more {
     display: block;
-    font-size: 0.8rem;
-    color: var(--bs-secondary, #6c757d);
-    margin-bottom: 0.75rem;
-}
-
-.block_profile_completion .pcb-cta-wrap {
-    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--pcb-muted);
+    margin-top: 0.5rem;
 }
 
 .block_profile_completion .pcb-cta {
-    width: 100%;
-    text-align: center;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-/* ── Interests ── */
-.block_profile_completion .pcb-interests {
-    border-top: 1px solid var(--bs-gray-200, #e9ecef);
-    padding-top: 1rem;
-    margin-bottom: 1rem;
-}
-
-.block_profile_completion .pcb-interests-label {
     display: block;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--bs-secondary, #6c757d);
-    margin-bottom: 0.5rem;
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: var(--pcb-accent);
+    color: var(--pcb-accent-ink);
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    transition: filter 0.15s ease;
 }
 
-.block_profile_completion .pcb-interests-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 0.5rem;
+.block_profile_completion .pcb-cta:hover,
+.block_profile_completion .pcb-cta:focus {
+    color: var(--pcb-accent-ink);
+    text-decoration: none;
+    filter: brightness(1.08);
 }
 
-.block_profile_completion .pcb-interest-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.2rem 0.55rem;
-    background: var(--bs-primary-bg-subtle, #cfe2ff);
-    color: var(--bs-primary-text-emphasis, #052c65);
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
+/* ── Inputs and buttons ───────────────────────────────────────────────── */
+
+/* The modal's controls carry Bootstrap's .form-control / .form-select, so
+   they are already themed; these rules only cover the inline interest row. */
+.block_profile_completion .pcb-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--bs-body-bg, #fff);
+    border: 1px solid var(--pcb-hairline);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    color: var(--pcb-body);
+    font-size: 0.875rem;
+    font-family: inherit;
 }
 
-.block_profile_completion .pcb-interest-remove {
+.block_profile_completion .pcb-input::placeholder {
+    color: var(--pcb-muted);
+    opacity: 1;
+}
+
+.block_profile_completion .pcb-input:focus {
+    outline: 2px solid var(--pcb-accent);
+    outline-offset: 1px;
+    border-color: transparent;
+}
+
+.block_profile_completion .pcb-btn {
+    padding: 0.375rem 0.875rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: 1px solid var(--pcb-hairline);
     background: none;
-    border: none;
-    padding: 0;
-    line-height: 1;
+    color: var(--pcb-body);
     cursor: pointer;
-    color: inherit;
+    transition: background 0.15s ease;
+}
+
+.block_profile_completion .pcb-btn:hover {
+    background: var(--pcb-inset-hover);
+}
+
+.block_profile_completion .pcb-btn-primary {
+    background: var(--pcb-accent);
+    color: var(--pcb-accent-ink);
+    border-color: transparent;
+}
+
+.block_profile_completion .pcb-btn-primary:hover {
+    background: var(--pcb-accent);
+    filter: brightness(1.08);
+}
+
+.block_profile_completion .pcb-btn:disabled {
     opacity: 0.6;
-    font-size: 1rem;
+    cursor: default;
 }
 
-.block_profile_completion .pcb-interest-remove:hover { opacity: 1; }
+/* ── Modal ────────────────────────────────────────────────────────────── */
 
-.block_profile_completion .pcb-interest-add-btn {
-    background: none;
-    border: 1px dashed var(--bs-gray-400, #ced4da);
-    border-radius: 20px;
-    padding: 0.2rem 0.75rem;
-    font-size: 0.8rem;
-    color: var(--bs-secondary, #6c757d);
-    cursor: pointer;
+/* The inline editor uses core's Modal API, which owns its own positioning,
+   backdrop and stacking. Only the field wrapper is styled here. */
+.pcb-modal-field label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
 }
 
-.block_profile_completion .pcb-interest-add-btn:hover {
-    border-color: var(--bs-primary, #0d6efd);
-    color: var(--bs-primary, #0d6efd);
-}
+/* ── Motion ───────────────────────────────────────────────────────────── */
 
-.block_profile_completion .pcb-interest-input-row {
-    gap: 0.4rem;
-    align-items: center;
-    margin-top: 0.4rem;
-}
-
-.block_profile_completion .pcb-interest-input-row .form-control {
-    flex: 1;
+@media (prefers-reduced-motion: reduce) {
+    .block_profile_completion .pcb-ring-fill,
+    .block_profile_completion .pcb-chip,
+    .block_profile_completion .pcb-cta,
+    .block_profile_completion .pcb-pill-add,
+    .block_profile_completion .pcb-pill-remove,
+    .block_profile_completion .pcb-btn {
+        transition: none;
+    }
 }

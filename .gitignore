@@ -1,0 +1,8 @@
+# Editor and OS noise.
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Node tooling, if grunt is ever run in place.
+node_modules/
