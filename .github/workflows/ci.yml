@@ -87,12 +87,8 @@ jobs:
 
       - name: Mustache Lint
         if: ${{ !cancelled() }}
-        # mobile_view.mustache targets the Moodle App, so it carries Ionic and
-        # Angular attributes ([href], [class.x]) that the HTML validator cannot
-        # parse. Core app-aware plugins exclude it the same way.
+        # The app template is excluded in .moodle-plugin-ci.yml; see there.
         run: moodle-plugin-ci mustache
-        env:
-          MUSTACHE_IGNORE_NAMES: 'mobile*.mustache'
 
       - name: Grunt
         if: ${{ !cancelled() }}

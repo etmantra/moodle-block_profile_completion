@@ -1,0 +1,8 @@
+# mobile_view.mustache is rendered by the Moodle App, not by Moodle itself, so
+# it carries Ionic elements and Angular binding attributes ([href],
+# [class.complete]). The mustache linter validates templates as plain HTML and
+# cannot parse those, so exclude it from that check only — every other check
+# still sees the file.
+filter-mustache:
+  notNames:
+    - "mobile_view.mustache"

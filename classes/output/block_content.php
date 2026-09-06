@@ -124,10 +124,13 @@ class block_content implements renderable, templatable {
      * @param array $countries
      * @return array
      */
-    private function identity(renderer_base $output, \stdClass $dbuser,
-                              array $customvals, array $countries): array {
-
-        // visibletoscreenreaders=false: the user's own name sits immediately
+    private function identity(
+        renderer_base $output,
+        \stdClass $dbuser,
+        array $customvals,
+        array $countries
+    ): array {
+        // The visibletoscreenreaders flag is false because the user's own name sits immediately
         // beside the avatar, so an alt text of that name would be read twice.
         $picture = new \core\output\user_picture($dbuser);
         $picture->size = 100;

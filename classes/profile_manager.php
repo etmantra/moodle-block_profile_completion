@@ -245,7 +245,7 @@ class profile_manager {
         require_once($CFG->dirroot . '/user/profile/lib.php');
 
         if (in_array($fieldkey, self::get_savable_standard_fields(), true)) {
-            // user_update_user() validates, cleans and triggers user_updated.
+            // The user_update_user() call validates, cleans and triggers user_updated.
             // Passing false for $updatepassword: there is no password here.
             $update = (object) [
                 'id'        => $userid,
@@ -272,7 +272,6 @@ class profile_manager {
                     $USER->descriptionformat = FORMAT_PLAIN;
                 }
             }
-
         } else {
             // Any custom field the admin has defined. Unknown keys are
             // rejected: $fieldkey reaching the DB unvalidated would be a
@@ -281,9 +280,10 @@ class profile_manager {
                 throw new \moodle_exception('errorinvalidfield', 'block_profile_completion');
             }
 
-            // profile_save_data() expects the id plus profile_field_<shortname>
-            // keys, and handles insert-vs-update and the field's own save
-            // hooks. It does not fire user_updated, so do that explicitly.
+            // The profile_save_data() call expects the id plus
+            // profile_field_<shortname> keys, and handles insert-vs-update and
+            // the field's own save hooks. It does not fire user_updated, so
+            // do that explicitly.
             $data = (object) [
                 'id' => $userid,
                 'profile_field_' . $fieldkey => $value,
@@ -310,7 +310,8 @@ class profile_manager {
      * @param string $tag
      */
     public static function add_interest(int $userid, \context $context, string $tag): void {
-        // set_item_tags replaces the whole set, so send existing plus the new.
+        // The set_item_tags() call replaces the whole set, so send existing
+        // plus the new.
         $names = [];
         $lower = [];
         foreach (\core_tag_tag::get_item_tags('core', 'user', $userid) as $existing) {
